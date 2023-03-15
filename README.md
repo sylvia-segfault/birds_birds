@@ -6,8 +6,8 @@ A major application of computer vision is tackling the problem of ‘image class
 
 # Dataset
 The dataset we used for this project can be found [here](https://www.kaggle.com/competitions/birds23wi/data).
-Methodology
 
+# Methodology
 ## Data Processing
 First, in our data processing, we loaded the images and checked their sizes. The images were not of consistent dimensions and not square, so we needed to perform some data transformations in order to ensure relative consistency across the dataset so that the algorithm can better compare values. Then, we checked the number of images across each class. Since each label had a different number of training images associated with it, we could either downsample or use image augmentation. The minimum number of images in a class was only 10, which would give us a very poor training dataset size if we used downsampling. We decided to use image augmentation instead with a transformer, resizing each sample into a dimension of 256x256 using random cropping with 8 padding, random image flipping along the horizontal axis, as well as the most optimized values of mean and standard deviation for normalization. This increased the number of images of classes with less data, and meanwhile, gave us some samples with a consistent image size. We also split our dataset in a 9:1 ratio of training to validation data to tune our hyperparameters without using the testing dataset, which could bias our model.
 
