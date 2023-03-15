@@ -5,7 +5,7 @@ https://drive.google.com/file/d/1-xqSXUD-yNe8QyX3zSYnUVne0IC2YcO9/view?usp=shari
 A major application of computer vision is tackling the problem of ‘image classification’, wherein the model classifies images into one of multiple predefined categories that it has been trained upon. In this project, we train a model that learns to classify images of birds into the bird species that is pictured in the image.
 
 # Dataset
-The dataset we used for this project can be found here.
+The dataset we used for this project can be found [here](https://www.kaggle.com/competitions/birds23wi/data).
 Methodology
 
 ## Data Processing
@@ -20,7 +20,7 @@ Xie et al. proposed a different deep neural network architecture for more accura
 
 ### Hyperparameters
 We started with resnet50 with its number of output features=555 (number of classes in the dataset) using the first train function mentioned in the implementation section.
-
+```
 EPOCHS = 15
 IMG_SIZE = 128
 BATCH_SIZE = 64
@@ -28,11 +28,10 @@ STEP_SIZE = 5
 GAMMA = 0.1
 DECAY = 0.00047
 Training   accuracy: 0.906181
-
-
-
+```
+<br></br>
 For the same neural network, we increased the image size and decreased the step size. This has improved the model performance by a small amount.
-
+```
 EPOCHS = 10
 IMG_SIZE = 256
 BATCH_SIZE = 64
@@ -41,10 +40,10 @@ GAMMA = 0.1
 DECAY = 0.00047
 Training   accuracy: 0.920444
 Validation accuracy: 0.793622
-
-
+```
+<br></br>
 We also tried adjusting the value of gamma. This also appeared to improve model performance by an amount as well. Gamma is a multiplicative factor that decreases the learning rate as the model learns, so it makes sense that a slight increase in this parameter helped increase training accuracy. However, increasing the gamma value past 0.3 only lead to a decrease in training and validation accuracy.
-
+```
 EPOCHS = 10
 IMG_SIZE = 256
 BATCH_SIZE = 64
@@ -53,10 +52,10 @@ GAMMA = 0.3
 DECAY = 0.00047
 Training   accuracy: 0.964558
 Validation accuracy: 0.817993
-
-
+```
+<br></br>
 Therefore, we then changed the learning rate scheduler by using the second train function mentioned in the implementation section and made the model train for more epochs. Training for longer epochs and using a fine-tuned learning rate scheduler greatly improved the model performance.
-
+```
 EPOCHS = 20
 IMG_SIZE = 256
 BATCH_SIZE = 64
@@ -64,10 +63,10 @@ DECAY = 0.00047
 Learning rate schedule={0: 0.01, 3: 0.0075, 5: 0.005, 7: 0.0025, 9: 0.001}
 Training   accuracy: 0.994669
 Validation accuracy: 0.824994
-
-
+```
+<br></br>
 In the final training run, we decreased the batch size and used a more complex pre-trained neural network model, resnext101_32x8d. Increasing the model complexity as well as decreasing the batch size to make the model generalize better improved the validation accuracy by a significant amount.
-
+```
 EPOCHS = 20
 IMG_SIZE = 256
 BATCH_SIZE = 32
@@ -75,7 +74,8 @@ DECAY = 0.00047
 Learning rate schedule={0: 0.01, 3: 0.0075, 5: 0.005, 7: 0.0025, 9: 0.001}
 Training   accuracy: 0.998502
 Validation accuracy: 0.860254
-
+```
+<br></br>
 
 Training for longer epochs allows the model to learn better, but it can take a very long time for a very complex neural network. The final training run took us over 10 hours. A small value of weight decay can reduce the model complexity and prevent the model from overfitting, and improve the generalization performance of deep neural networks. 
 
@@ -89,18 +89,19 @@ Based on our experiments, we concluded that training for longer epochs, using a 
 
 ### Other Details
 Our final model training can be summarized as follows:
-Final pretrained model used: ResNeXt 101 from PyTorch
-Loss function: Cross-entropy loss
-Optimizer: SGD
+- Final pretrained model used: ResNeXt 101 from PyTorch
+- Loss function: Cross-entropy loss
+- Optimizer: SGD
+
 Final Hyperparameters
-Epochs: 20
-Image size: 256
-Batch size: 32
-Decay: 0.00047
-Learning rate schedule: {0: 0.01, 3: 0.0075, 5: 0.005, 7: 0.0025, 9: 0.001}
+- Epochs: 20
+- Image size: 256
+- Batch size: 32
+- Decay: 0.00047
+- Learning rate schedule: {0: 0.01, 3: 0.0075, 5: 0.005, 7: 0.0025, 9: 0.001}
 
 # Implementation
-We adopted the function for processing the birds dataset, the train function, the accuracy function as well as the predict function from ImageNet and Transfer Learning and Transfer Learning to Birds. In the following, we will discuss the components we customized on top of what we have adopted. We customized the component for extracting the birds dataset into Google Drive folders using the zipfile library. There was one component used to investigate image sizes in the dataset for the purpose of tuning the right size for image resizing and cropping, as mentioned above in the Data Processing section. We also added logic to split the training set into 90% training data and 10% validation data using random_split with a fixed seed 47 and DataLoader. This made it easier to load those data while computing the training and validation accuracies. We had two different kinds of train functions with the only difference being how we adjusted learning rates at different training epochs. The first train function experimented with using the optimizer’s learning rate scheduler by calling optim_lr_scheduler.StepLR with customized step_size and gamma to specify that: every time when the epoch advances to the next step_size, the learning rate should change by step_size. The second train function was adopted from the resources mentioned above and was also the one we used to get the final results.
+We adopted the function for processing the birds dataset, the train function, the accuracy function as well as the predict function from [ImageNet and Transfer Learning](https://colab.research.google.com/drive/1EBz4feoaUvz-o_yeMI27LEQBkvrXNc_4?usp=sharing#scrollTo=9qltoeXQQRJ-) and [Transfer Learning to Birds](https://colab.research.google.com/drive/1kHo8VT-onDxbtS3FM77VImG35h_K_Lav?usp=sharing#scrollTo=C5_LglWCs9Iu). In the following, we will discuss the components we customized on top of what we have adopted. We customized the component for extracting the birds dataset into Google Drive folders using the zipfile library. There was one component used to investigate image sizes in the dataset for the purpose of tuning the right size for image resizing and cropping, as mentioned above in the Data Processing section. We also added logic to split the training set into 90% training data and 10% validation data using random_split with a fixed seed 47 and DataLoader. This made it easier to load those data while computing the training and validation accuracies. We had two different kinds of train functions with the only difference being how we adjusted learning rates at different training epochs. The first train function experimented with using the optimizer’s learning rate scheduler by calling optim_lr_scheduler.StepLR with customized step_size and gamma to specify that: every time when the epoch advances to the next step_size, the learning rate should change by step_size. The second train function was adopted from the resources mentioned above and was also the one we used to get the final results.
 Results
 Our final model submission had a 99.9% training accuracy and 86% validation accuracy.
 
